@@ -28,13 +28,16 @@ export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, re
   }
 }
 
+type Cep = { cep: string };
+
 export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response) {
+  const { cep } = req.query as Cep;
+
   try {
-    const address = await enrollmentsService.getAddressFromCEP();
+    const address = await enrollmentsService.getAddressFromCEP(cep);
     res.status(httpStatus.OK).send(address);
   } catch (error) {
-    if (error.name === 'NotFoundError') {
-      return res.send(httpStatus.NO_CONTENT);
-    }
+    if (error.name === 'NotFoundError') return res.sendStatus(httpStatus.NO_CONTENT);
+    if (error.name === 'InvalidCepError') return res.status(httpStatus.NO_CONTENT).send(error.message);
   }
 }
