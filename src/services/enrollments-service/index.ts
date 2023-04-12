@@ -10,7 +10,6 @@ import { ViaCEPAddress } from '@/protocols';
 async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress> {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
 
-  //if (!result.data) throw notFoundError();
   if (!result.data || result.data.erro) throw invalidCepError(cep);
 
   const { logradouro, complemento, bairro, localidade, uf } = result.data;
@@ -53,11 +52,10 @@ type GetAddressResult = Omit<Address, 'createdAt' | 'updatedAt' | 'enrollmentId'
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
-  const cep = address.cep.replace('-', '');
 
   try {
-    await getAddressFromCEP(cep);
-  } catch (error) {
+    await getAddressFromCEP(address.cep);
+  } catch {
     throw invalidDataError(['invalid CEP']);
   }
 
