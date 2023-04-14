@@ -24,8 +24,8 @@ async function getUserTickets(enrollmentId: number): Promise<UserTicket> {
   return ticket;
 }
 
-async function getTicketById(id: number): Promise<UserTicket> {
-  const ticket = await prisma.ticket.findUnique({
+async function getTicketById(id: number): Promise<UserTicket | null> {
+  const ticket = await prisma.ticket.findFirst({
     where: { id },
     select: {
       id: true,
