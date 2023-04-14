@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import { Ticket, TicketType } from '@prisma/client';
 import { AuthenticatedRequest } from '@/middlewares';
 import ticketsService from '@/services/tickets-service';
+import { UserTicket } from '@/protocols';
 
 export async function getAllTickets(req: AuthenticatedRequest, res: Response) {
   try {
@@ -17,7 +18,7 @@ export async function getAllTickets(req: AuthenticatedRequest, res: Response) {
 export async function getUserTickets(req: AuthenticatedRequest, res: Response) {
   const id: number = req.userId;
   try {
-    const ticket: Ticket = await ticketsService.getUserTickets(id);
+    const ticket: UserTicket = await ticketsService.getUserTickets(id);
     res.status(httpStatus.OK).send(ticket);
   } catch (error) {
     if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
@@ -30,7 +31,7 @@ export async function postTicket(req: AuthenticatedRequest, res: Response) {
   const id: number = req.userId;
 
   try {
-    const ticket = await ticketsService.postTicket(ticketTypeId, id);
+    const ticket: UserTicket = await ticketsService.postTicket(ticketTypeId, id);
     res.status(httpStatus.CREATED).send(ticket);
   } catch (error) {
     if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
