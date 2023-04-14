@@ -18,8 +18,10 @@ async function getUserTickets(id: number): Promise<Ticket> {
 }
 
 async function postTicket(ticketTypeId: number, id: number) {
-  const newTicket = await ticketsRepository.postTicket(ticketTypeId, id);
-  //const newTicket:Ticket = await ticketsRepository.getTicketById(newTicketId)
+  const enrollment: Enrollment = await enrollmentRepository.findWithAddressByUserId(id);
+  if (!enrollment) throw notFoundError();
+
+  const newTicket = await ticketsRepository.postTicket(ticketTypeId, enrollment.id);
 
   return newTicket;
 }

@@ -40,11 +40,11 @@ async function getTicketById(id: number) {
   return ticket;
 }
 
-async function postTicket(ticketTypeId: number, userId: number) {
+async function postTicket(ticketTypeId: number, enrollmentId: number) {
   const newTicket = await prisma.ticket.create({
     data: {
-      TicketType: { connect: { id: ticketTypeId } },
-      Enrollment: { connect: { userId: userId } },
+      ticketTypeId,
+      enrollmentId,
       status: 'RESERVED',
     },
     select: {
