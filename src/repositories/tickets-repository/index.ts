@@ -7,9 +7,18 @@ async function getAllTicketsType() {
   return ticket;
 }
 
-async function getUserTickets(userId: number) {
+async function getUserTickets(enrollmentId: number) {
   const ticket: Ticket = await prisma.ticket.findFirst({
-    where: { enrollmentId: { equals: userId } },
+    where: { enrollmentId },
+    select: {
+      id: true,
+      status: true,
+      ticketTypeId: true,
+      enrollmentId: true,
+      TicketType: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   return ticket;
