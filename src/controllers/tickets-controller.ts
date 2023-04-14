@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
-import { Ticket, TicketType } from '@prisma/client';
+import { TicketType } from '@prisma/client';
 import { AuthenticatedRequest } from '@/middlewares';
 import ticketsService from '@/services/tickets-service';
 import { UserTicket } from '@/protocols';

@@ -1,5 +1,4 @@
-import { error } from 'console';
-import { Address, Enrollment, Ticket, TicketType } from '@prisma/client';
+import { Enrollment, TicketType } from '@prisma/client';
 import { notFoundError } from '@/errors';
 import ticketsRepository from '@/repositories/tickets-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
