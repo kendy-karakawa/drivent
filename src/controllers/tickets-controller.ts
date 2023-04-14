@@ -24,3 +24,16 @@ export async function getUserTickets(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(500);
   }
 }
+
+export async function postTicket(req: AuthenticatedRequest, res: Response) {
+  const ticketTypeId: number = req.body.ticketTypeId;
+  const id: number = req.userId;
+
+  try {
+    const ticket = await ticketsService.postTicket(ticketTypeId, id);
+    res.status(httpStatus.CREATED).send(ticket);
+  } catch (error) {
+    if (error.name === 'NotFoundError') return res.status(httpStatus.NOT_FOUND).send(error.message);
+    return res.sendStatus(500);
+  }
+}
