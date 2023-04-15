@@ -1,4 +1,4 @@
-import { TicketType } from '@prisma/client';
+import { TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
 import { UserTicket } from '@/protocols';
 
@@ -45,7 +45,7 @@ async function postTicket(ticketTypeId: number, enrollmentId: number): Promise<U
     data: {
       ticketTypeId,
       enrollmentId,
-      status: 'RESERVED',
+      status: TicketStatus.RESERVED,
     },
     select: {
       id: true,
@@ -67,7 +67,7 @@ async function updateTicket(ticketId: number) {
       id: ticketId,
     },
     data: {
-      status: 'PAID',
+      status: TicketStatus.PAID,
     },
   });
 }
