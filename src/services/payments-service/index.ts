@@ -24,7 +24,7 @@ async function postPayment(userId: number, ticketId: number, cardData: CardData)
   const enrollment: Enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (ticket.enrollmentId !== enrollment.id) throw unauthorizedError();
 
-  const data: Omit<Payment, 'id'> = {
+  const data: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'> = {
     ticketId,
     value: ticket.TicketType.price,
     cardIssuer: cardData.issuer,
