@@ -9,7 +9,7 @@ async function getPayment(ticketId: number): Promise<Payment> {
   return payment;
 }
 
-async function postPayment(data: Omit<Payment, 'id'>) {
+async function postPayment(data: Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>) {
   const payment = await prisma.payment.create({
     data,
   });

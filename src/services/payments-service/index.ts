@@ -37,7 +37,9 @@ async function postPayment(userId: number, ticketId: number, cardData: CardData)
   return payment;
 }
 
-export default {
+const paymentsService = {
   getPaymentInfo,
   postPayment,
 };
+
+export default paymentsService;
