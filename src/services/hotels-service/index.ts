@@ -9,7 +9,7 @@ async function getAllHotels(userId: number) {
   const enrollment: Enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) throw notFoundError();
 
-  const ticket: UserTicket = await ticketsRepository.getUserTickets(userId);
+  const ticket: UserTicket = await ticketsRepository.getUserTickets(enrollment.id);
   if (!ticket) throw notFoundError();
   if (ticket.TicketType.includesHotel === false) throw paymentRequiredError();
   if (ticket.TicketType.isRemote === true) throw paymentRequiredError();

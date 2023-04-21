@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
 import { cleanDb, generateValidToken } from '../helpers';
-import { createUser } from '../factories';
+import { createEnrollmentWithAddress, createUser } from '../factories';
 import { prisma } from '@/config';
 import app, { init } from '@/app';
 
@@ -45,6 +45,15 @@ describe('GET /hotels', () => {
     it('shoul respond with status 404 when user dont have enrollment', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('shoul respond with status 404 when user dont have ticket', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      await createEnrollmentWithAddress(user);
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(httpStatus.NOT_FOUND);
