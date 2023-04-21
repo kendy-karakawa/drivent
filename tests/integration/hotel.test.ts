@@ -2,8 +2,17 @@ import faker from '@faker-js/faker';
 import supertest from 'supertest';
 import httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
+import { TicketStatus } from '@prisma/client';
 import { cleanDb, generateValidToken } from '../helpers';
-import { createEnrollmentWithAddress, createUser } from '../factories';
+import {
+  createEnrollmentWithAddress,
+  createTicket,
+  createTicketTypeIsRemoteTrue,
+  createTicketTypeNotIncludesHotel,
+  createTicketTypeWhenIncludesHotel,
+  createUser,
+} from '../factories';
+import { createHotel } from '../factories/hotels.factory';
 import { prisma } from '@/config';
 import app, { init } from '@/app';
 
@@ -57,6 +66,72 @@ describe('GET /hotels', () => {
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('shoul respond with status 402 when tiket type not includes hotel', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeNotIncludesHotel();
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
+    });
+
+    it('shoul respond with status 402 when tiket type is remote', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeIsRemoteTrue();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
+    });
+
+    it('shoul respond with status 402 when ticketStatus is RESERVED', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWhenIncludesHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
+    });
+
+    it('should respond with status 200 and with empty array when there are no hotels created', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWhenIncludesHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toEqual(httpStatus.OK);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should respond with status 200 and with and with existing hotels data', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWhenIncludesHotel();
+      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const hotel = await createHotel();
+
+      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toEqual(httpStatus.OK);
+      expect(response.body).toEqual([
+        {
+          id: hotel.id,
+          name: hotel.name,
+          image: hotel.image,
+          createdAt: hotel.createdAt.toISOString(),
+          updatedAt: hotel.updatedAt.toISOString(),
+        },
+      ]);
     });
   });
 });
