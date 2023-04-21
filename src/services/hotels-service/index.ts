@@ -1,10 +1,14 @@
-import { TicketStatus } from '@prisma/client';
+import { Enrollment, TicketStatus } from '@prisma/client';
 import { notFoundError, paymentRequiredError } from '@/errors';
 import { UserTicket } from '@/protocols';
 import hotelsRepository from '@/repositories/hotels-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
+import enrollmentRepository from '@/repositories/enrollment-repository';
 
 async function getAllHotels(userId: number) {
+  const enrollment: Enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) throw notFoundError();
+
   const ticket: UserTicket = await ticketsRepository.getUserTickets(userId);
   if (!ticket) throw notFoundError();
   if (ticket.TicketType.includesHotel === false) throw paymentRequiredError();
