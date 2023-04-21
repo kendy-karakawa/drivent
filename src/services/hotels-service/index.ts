@@ -16,8 +16,16 @@ async function getAllHotels(userId: number) {
   return hotels;
 }
 
-async function getHotelRooms(hotelId: number) {
+async function getHotelRooms(userId: number, hotelId: number) {
+  const ticket: UserTicket = await ticketsRepository.getUserTickets(userId);
+  if (!ticket) throw notFoundError();
+  if (ticket.TicketType.includesHotel === false) throw paymentRequiredError();
+  if (ticket.TicketType.isRemote === true) throw paymentRequiredError();
+  if (ticket.status === TicketStatus.RESERVED) throw paymentRequiredError();
+
   const rooms = await hotelsRepository.getHotelRooms(hotelId);
+  if (!rooms) throw notFoundError();
+
   return rooms;
 }
 
