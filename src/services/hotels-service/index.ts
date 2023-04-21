@@ -16,7 +16,7 @@ async function getAllHotels(userId: number) {
   if (ticket.status === TicketStatus.RESERVED) throw paymentRequiredError();
 
   const hotels = await hotelsRepository.getAllHotels();
-
+  if (hotels.length === 0) throw notFoundError();
   return hotels;
 }
 
