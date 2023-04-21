@@ -12,3 +12,14 @@ export async function getAllHotels(req: AuthenticatedRequest, res: Response, nex
     next(error);
   }
 }
+
+export async function getHotelRooms(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const userId: number = req.userId;
+  const hotelId = req.params;
+  try {
+    const rooms = await hotelsService.getHotelRooms(userId);
+    res.status(httpStatus.OK).send(rooms);
+  } catch (error) {
+    next(error);
+  }
+}
