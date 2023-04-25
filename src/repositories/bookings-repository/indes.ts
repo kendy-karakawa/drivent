@@ -9,10 +9,13 @@ async function postBooking(userId: number, roomId: number) {
   });
 }
 
-async function getBooking(roomId: number) {
+async function getBooking(userId: number) {
   return prisma.booking.findFirst({
     where: {
-      roomId: roomId,
+      userId: userId,
+    },
+    include: {
+      Room: true,
     },
   });
 }

@@ -15,9 +15,11 @@ async function postBooking(userId: number, roomId: number) {
   return booking;
 }
 
-async function getBooking() {
-  const x = 'oii';
-  return x;
+async function getBooking(userId: number) {
+  const booking = await bookingsRepository.getBooking(userId);
+  if (!booking) throw notFoundError();
+
+  return booking;
 }
 
 const bookingsService = {
