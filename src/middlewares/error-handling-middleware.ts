@@ -44,6 +44,12 @@ export function handleApplicationErrors(
     });
   }
 
+  if (err.name === 'unavailableRoomError') {
+    return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message,
+    });
+  }
+
   /* eslint-disable-next-line no-console */
   //console.error(err.name);
 

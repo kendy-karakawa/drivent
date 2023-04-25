@@ -37,6 +37,7 @@ async function getHotelRooms(userId: number, hotelId: number) {
 const hotelsService = {
   getAllHotels,
   getHotelRooms,
+  listHotels,
 };
 
 export default hotelsService;
