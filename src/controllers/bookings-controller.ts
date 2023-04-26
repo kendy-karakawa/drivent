@@ -31,7 +31,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response, ne
   const userId = req.userId as number;
   const bookingId = Number(req.params.bookingId) as number;
   const roomId = req.body.roomId as number;
-
+  console.log('entrei');
   try {
     const booking: Booking = await bookingsService.updateBooking(userId, bookingId, roomId);
     res.status(httpStatus.OK).send({ bookinId: booking.id });
