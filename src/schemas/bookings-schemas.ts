@@ -5,5 +5,5 @@ export const roomIdSchema = Joi.object({
 });
 
 export const bookingIdSchema = Joi.object({
-  bookingId: Joi.number().required(),
+  bookingId: Joi.number(),
 });
