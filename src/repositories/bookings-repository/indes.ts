@@ -28,10 +28,22 @@ async function countRoomsBooked(roomId: number) {
   });
 }
 
+async function updateBooking(bookingId: number, roomId: number) {
+  return prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId: roomId,
+    },
+  });
+}
+
 const bookingsRepository = {
   postBooking,
   getBooking,
   countRoomsBooked,
+  updateBooking,
 };
 
 export default bookingsRepository;

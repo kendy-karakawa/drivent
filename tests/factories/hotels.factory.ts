@@ -4,7 +4,7 @@ import { prisma } from '@/config';
 export async function createHotel() {
   return prisma.hotel.create({
     data: {
-      name: 'Hotel xyz',
+      name: faker.name.lastName(),
       image: faker.image.dataUri(),
     },
   });
@@ -13,7 +13,7 @@ export async function createHotel() {
 export async function createHotelRoom(hotelId: number) {
   return prisma.room.create({
     data: {
-      name: 'Room 01',
+      name: faker.name.firstName(),
       capacity: 1,
       hotelId: hotelId,
     },
