@@ -1,5 +1,5 @@
 import hotelsService from '../hotels-service';
-import bookingsRepository from '@/repositories/bookings-repository/indes';
+import bookingsRepository from '@/repositories/booking-repository/indes';
 import roomsRepository from '@/repositories/rooms-repository';
 import { notFoundError, ForbiddenError } from '@/errors';
 
