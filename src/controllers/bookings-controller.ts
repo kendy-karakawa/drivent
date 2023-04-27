@@ -10,7 +10,7 @@ export async function postBooking(req: AuthenticatedRequest, res: Response, next
   try {
     const booking: Booking = await bookingsService.postBooking(userId, roomId);
 
-    res.status(httpStatus.OK).send({ bookinId: booking.id });
+    res.status(httpStatus.OK).send({ bookingId: booking.id });
   } catch (error) {
     next(error);
   }
@@ -34,7 +34,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response, ne
 
   try {
     const booking: Booking = await bookingsService.updateBooking(userId, bookingId, roomId);
-    res.status(httpStatus.OK).send({ bookinId: booking.id });
+    res.status(httpStatus.OK).send({ bookingId: booking.id });
   } catch (error) {
     next(error);
   }
