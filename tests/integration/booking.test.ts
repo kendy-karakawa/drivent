@@ -275,7 +275,7 @@ describe('PUT /booking/:bookingId', () => {
 
     describe('when token, params and body is valid', () => {
       it('should respond with 401 when params bookinId is not from user', async () => {
-        const user2 = await createUser();
+        const anotherUser = await createUser();
         const user = await createUser();
         const token = await generateValidToken(user);
         const enrollment = await createEnrollmentWithAddress(user);
@@ -283,7 +283,7 @@ describe('PUT /booking/:bookingId', () => {
         await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
         const hotel = await createHotel();
         const room = await createHotelRoom(hotel.id);
-        const booking = await createbooking(user2.id, room.id);
+        const booking = await createbooking(anotherUser.id, room.id);
         const body = { roomId: room.id };
 
         const response = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send(body);
